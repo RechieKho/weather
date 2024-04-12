@@ -89,7 +89,7 @@ export default function useForcast({
         setForcast(Forcast.parse((await result).json()));
       } catch (e) {
         if (!(e instanceof Error)) return; // Ignore malformed throw.
-        if (e.name === "AbortError") return; // Ignore aboort error.
+        if (e.name === "AbortError") return; // Ignore abort error.
         setForcast(e);
       }
     })();
