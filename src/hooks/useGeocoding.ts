@@ -9,7 +9,7 @@ const Geocoding = z.array(
     lat: z.number().finite(),
     lon: z.number().finite(),
     country: z.string(),
-    state: z.string(),
+    state: z.string().optional(),
   })
 );
 
@@ -20,7 +20,7 @@ export default function useGeocoding({
 }: {
   apiKey: string;
   query: string;
-  limit: number;
+  limit?: number;
 }) {
   const [geocoding, setGeocoding] = useState<
     z.infer<typeof Geocoding> | Error | null

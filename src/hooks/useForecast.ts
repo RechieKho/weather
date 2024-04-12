@@ -4,8 +4,8 @@ import { z } from "zod";
 const forcastURL = "https://api.openweathermap.org/data/2.5/forecast";
 
 const Forcast = z.object({
-  cod: z.number(),
-  message: z.string(),
+  cod: z.string().transform((e, _) => parseInt(e)),
+  message: z.number(),
   cnt: z.number().positive().int().finite(),
   list: z.array(
     z.object({
@@ -21,22 +21,26 @@ const Forcast = z.object({
         grnd_level: z.number().positive().finite(),
         temp_kf: z.number(),
       }),
-      weather: z.object({
-        id: z.number(),
-        main: z.string(),
-        description: z.string(),
-        icon: z.string(),
-      }),
-      city: z.object({
-        coord: z.object({
-          lat: z.number().finite(),
-          lon: z.number().finite(),
-        }),
-        population: z.number().positive().finite(),
-        timezone: z.number().positive().int(),
-        sunrise: z.number().positive().int(),
-        sunset: z.number().positive().int(),
-      }),
+      weather: z.array(
+        z.object({
+          id: z.number(),
+          main: z.string(),
+          description: z.string(),
+          icon: z.string(),
+        })
+      ),
+      city: z
+        .object({
+          coord: z.object({
+            lat: z.number().finite(),
+            lon: z.number().finite(),
+          }),
+          population: z.number().positive().finite(),
+          timezone: z.number().positive().int(),
+          sunrise: z.number().positive().int(),
+          sunset: z.number().positive().int(),
+        })
+        .optional(),
     })
   ),
 });
@@ -52,9 +56,9 @@ export default function useForcast({
   apiKey: string;
   latitude: number;
   longitude: number;
-  units: string;
-  language: string;
-  count: number;
+  units?: string;
+  language?: string;
+  count?: number;
 }) {
   const [forcast, setForcast] = useState<
     z.infer<typeof Forcast> | Error | null
@@ -85,8 +89,8 @@ export default function useForcast({
           }
         );
 
-        const result = fetch(request, { signal: controller.signal });
-        setForcast(Forcast.parse((await result).json()));
+        const result = await fetch(request, { signal: controller.signal });
+        setForcast(Forcast.parse(await result.json()));
       } catch (e) {
         if (!(e instanceof Error)) return; // Ignore malformed throw.
         if (e.name === "AbortError") return; // Ignore abort error.

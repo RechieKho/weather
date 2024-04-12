@@ -1,13 +1,18 @@
 import { useEffect, useState } from "react";
 import { z } from "zod";
 
-const weatherURL = "https://apiKey.openweathermap.org/data/2.5/weather";
+const weatherURL = "https://api.openweathermap.org/data/2.5/weather";
 
 const Weather = z.object({
+  base: z.string(),
+  clouds: z.object({
+    all: z.number().min(0).max(100),
+  }),
   coord: z.object({
     lon: z.number().finite(),
     lat: z.number().finite(),
   }),
+  dt: z.number().positive().int(),
   weather: z.array(
     z.object({
       id: z.number().finite().int(),
@@ -16,7 +21,6 @@ const Weather = z.object({
       icon: z.string(),
     })
   ),
-  base: z.string(),
   main: z.object({
     temp: z.number().finite(),
     feels_like: z.number().finite(),
@@ -33,26 +37,23 @@ const Weather = z.object({
     deg: z.number().finite(),
     gust: z.number().finite(),
   }),
-  clouds: z.object({
-    all: z.number().min(0).max(100),
-  }),
-  rain: z.object({
-    "1h": z.number().positive().finite().optional(),
-    "3h": z.number().positive().finite().optional(),
-  }),
-  snow: z.object({
-    "1h": z.number().positive().finite().optional(),
-    "3h": z.number().positive().finite().optional(),
-  }),
-  dt: z.number().positive().int(),
+  rain: z
+    .object({
+      "1h": z.number().positive().finite().optional(),
+      "3h": z.number().positive().finite().optional(),
+    })
+    .optional(),
+  snow: z
+    .object({
+      "1h": z.number().positive().finite().optional(),
+      "3h": z.number().positive().finite().optional(),
+    })
+    .optional(),
   sys: z.object({
-    type: z.number(),
-    id: z.number(),
-    country: z.string(),
     sunrise: z.number().positive().int(),
     sunset: z.number().positive().int(),
   }),
-  timezone: z.number().positive().int(),
+  timezone: z.number().int(),
   cod: z.number(),
 });
 
@@ -66,8 +67,8 @@ export default function useWeather({
   apiKey: string;
   latitude: number;
   longitude: number;
-  language: string;
-  units: string;
+  language?: string;
+  units?: string;
 }) {
   const [weather, setWeather] = useState<
     z.infer<typeof Weather> | Error | null
