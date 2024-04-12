@@ -1,4 +1,4 @@
-import { DependencyList, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { z } from "zod";
 
 const weatherURL = "https://apiKey.openweathermap.org/data/2.5/weather";
@@ -62,14 +62,12 @@ export default function useWeather({
   longitude,
   language = "EN",
   units = "metric",
-  deps,
 }: {
   apiKey: string;
   latitude: number;
   longitude: number;
   language: string;
   units: string;
-  deps?: DependencyList;
 }) {
   const [weather, setWeather] = useState<
     z.infer<typeof Weather> | Error | null
@@ -110,7 +108,7 @@ export default function useWeather({
     })();
 
     return () => controller.abort();
-  }, deps);
+  }, [apiKey, latitude, longitude, language, units]);
 
   return weather;
 }

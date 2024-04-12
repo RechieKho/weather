@@ -1,4 +1,4 @@
-import { DependencyList, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { z } from "zod";
 
 const forcastURL = "https://api.openweathermap.org/data/2.5/forecast";
@@ -48,7 +48,6 @@ export default function useForcast({
   units = "metric",
   language = "EN",
   count = 3,
-  deps,
 }: {
   apiKey: string;
   latitude: number;
@@ -56,7 +55,6 @@ export default function useForcast({
   units: string;
   language: string;
   count: number;
-  deps?: DependencyList;
 }) {
   const [forcast, setForcast] = useState<
     z.infer<typeof Forcast> | Error | null
@@ -97,7 +95,7 @@ export default function useForcast({
     })();
 
     return () => controller.abort();
-  }, deps);
+  }, [apiKey, latitude, longitude, units, language, count]);
 
   return forcast;
 }
