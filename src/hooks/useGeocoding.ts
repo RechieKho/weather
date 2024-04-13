@@ -13,48 +13,53 @@ const Geocoding = z.array(
   })
 );
 
+export type GeocodingResult = z.infer<typeof Geocoding>;
+
 export default function useGeocoding({
   apiKey,
   query,
   limit = 5,
 }: {
   apiKey: string;
-  query: string;
+  query?: string;
   limit?: number;
 }) {
-  const [geocoding, setGeocoding] = useState<
-    z.infer<typeof Geocoding> | Error | null
-  >();
+  const [geocoding, setGeocoding] = useState<GeocodingResult | Error | null>(
+    []
+  );
 
   useEffect(() => {
     const controller = new AbortController();
 
-    (async () => {
-      try {
-        const headers = new Headers();
-        const searchParams = new URLSearchParams();
-        searchParams.append("q", query);
-        searchParams.append("appid", apiKey);
-        searchParams.append("limit", limit.toString());
+    setGeocoding(null);
+    if (query)
+      (async () => {
+        try {
+          const headers = new Headers();
+          const searchParams = new URLSearchParams();
+          searchParams.append("q", query);
+          searchParams.append("appid", apiKey);
+          searchParams.append("limit", limit.toString());
 
-        const request = new Request(
-          `${geocodingURL}?${searchParams.toString()}`,
-          {
-            method: "GET",
-            headers,
-            mode: "cors",
-            cache: "default",
-          }
-        );
+          const request = new Request(
+            `${geocodingURL}?${searchParams.toString()}`,
+            {
+              method: "GET",
+              headers,
+              mode: "cors",
+              cache: "default",
+            }
+          );
 
-        const result = await fetch(request, { signal: controller.signal });
-        setGeocoding(Geocoding.parse(await result.json()));
-      } catch (e) {
-        if (!(e instanceof Error)) return; // Ignore malformed throw.
-        if (e.name === "AbortError") return; // Ignore abort error.
-        setGeocoding(e);
-      }
-    })();
+          const result = await fetch(request, { signal: controller.signal });
+          setGeocoding(Geocoding.parse(await result.json()));
+        } catch (e) {
+          if (!(e instanceof Error)) return; // Ignore malformed throw.
+          if (e.name === "AbortError") return; // Ignore abort error.
+          setGeocoding(e);
+        }
+      })();
+    else setGeocoding([]);
 
     return () => controller.abort();
   }, [apiKey, query, limit]);
