@@ -28,14 +28,14 @@ const Weather = z.object({
     temp_max: z.number().finite(),
     pressure: z.number().positive().finite(),
     humidity: z.number().min(0).max(100),
-    sea_level: z.number().positive().finite(),
-    grnd_level: z.number().positive().finite(),
+    sea_level: z.number().positive().finite().optional(),
+    grnd_level: z.number().positive().finite().optional(),
   }),
   visibility: z.number().positive().max(10000),
   wind: z.object({
     speed: z.number().finite(),
     deg: z.number().finite(),
-    gust: z.number().finite(),
+    gust: z.number().finite().optional(),
   }),
   rain: z
     .object({

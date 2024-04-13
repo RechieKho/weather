@@ -2,7 +2,7 @@ import { Autocomplete, TextField, Box, Grid, Typography } from "@mui/material";
 import useGeocoding, { GeocodingResult } from "../hooks/useGeocoding";
 import { useEffect, useState } from "react";
 import { ValuesType } from "utility-types";
-import { FaLocationDot } from "react-icons/fa6";
+import { LocationOn } from "@mui/icons-material";
 
 export default function LocationFinder({
   apiKey,
@@ -74,7 +74,7 @@ export default function LocationFinder({
           <Box component="li" {...props}>
             <Grid container alignItems="center" spacing={1}>
               <Grid item>
-                <FaLocationDot />
+                <LocationOn />
               </Grid>
               <Grid item>
                 <Typography>{option.name}</Typography>
