@@ -7,10 +7,10 @@ import "./index.css";
 
 import React from "react";
 import ReactDOM from "react-dom/client";
-import { Typography } from "@mui/material";
+import App from "./App";
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
-    <Typography>Hello world!</Typography>
+    <App></App>
   </React.StrictMode>
 );
