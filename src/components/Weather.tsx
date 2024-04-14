@@ -10,6 +10,7 @@ import useWeather from "../hooks/useWeather";
 import { useMemo } from "react";
 import {
   AcUnit,
+  AccessTime,
   Air,
   Cloud,
   Compress,
@@ -19,6 +20,7 @@ import {
   Water,
   WaterDrop,
 } from "@mui/icons-material";
+import moment from "moment";
 
 export default function Weather({
   apiKey,
@@ -159,6 +161,15 @@ export default function Weather({
             ></Aspect>
             <RainAspect />
             <SnowAspect />
+            <Aspect
+              icon={<AccessTime />}
+              text={moment
+                .unix(weather.dt)
+                .utc()
+                .add(weather.timezone, "seconds")
+                .format("DD-MM-YYYY HH:mm")}
+              description="Time"
+            ></Aspect>
           </Grid>
         </CardContent>
       </Card>
