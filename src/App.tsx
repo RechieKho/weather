@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { locationScheme } from "./hooks/useGeocoding";
 import Weather from "./components/Weather";
 import { z } from "zod";
+import Forcast from "./components/Forcast";
 
 const WEATHER_API_KEY = import.meta.env.VITE_WEATHER_API_KEY;
 const STORAGE_LOCATION_KEY = "location";
@@ -48,15 +49,25 @@ export default function App() {
             .filter((e) => e)
             .join(", ")}
         </Typography>
-        <Typography variant="body2" color="text.secondary">
+        <Typography gutterBottom variant="body2" color="text.secondary">
           {location.lat.toFixed(4)}&deg;N, {location.lon.toFixed(4)}&deg;E
         </Typography>
+        <Weather
+          apiKey={WEATHER_API_KEY}
+          longitude={location.lon}
+          latitude={location.lat}
+        ></Weather>
       </Box>
-      <Weather
-        apiKey={WEATHER_API_KEY}
-        longitude={location.lon}
-        latitude={location.lat}
-      ></Weather>
+      <Box sx={{ my: 2 }}>
+        <Typography gutterBottom variant="h5">
+          Forcast
+        </Typography>
+        <Forcast
+          apiKey={WEATHER_API_KEY}
+          longitude={location.lon}
+          latitude={location.lat}
+        ></Forcast>
+      </Box>
     </Container>
   );
 }

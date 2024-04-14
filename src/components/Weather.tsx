@@ -119,8 +119,8 @@ export default function Weather({
         <CardContent>
           {currentWeather && (
             <Grid container sx={{ mb: 4 }} alignItems="center" spacing={1}>
-              <Grid item xs={1}>
-                <Cloud />
+              <Grid item>
+                <Cloud sx={{ mr: 1 }} />
               </Grid>
               <Grid item>
                 <Typography variant="h5">{currentWeather.main}</Typography>

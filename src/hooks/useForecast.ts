@@ -29,20 +29,19 @@ const Forcast = z.object({
           icon: z.string(),
         })
       ),
-      city: z
-        .object({
-          coord: z.object({
-            lat: z.number().finite(),
-            lon: z.number().finite(),
-          }),
-          population: z.number().positive().finite(),
-          timezone: z.number().positive().int(),
-          sunrise: z.number().positive().int(),
-          sunset: z.number().positive().int(),
-        })
-        .optional(),
+      dt_txt: z.string(),
     })
   ),
+  city: z.object({
+    coord: z.object({
+      lat: z.number().finite(),
+      lon: z.number().finite(),
+    }),
+    population: z.number().positive().finite(),
+    timezone: z.number().int(),
+    sunrise: z.number().positive().int(),
+    sunset: z.number().positive().int(),
+  }),
 });
 
 export default function useForcast({
