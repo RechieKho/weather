@@ -1,4 +1,4 @@
-import { Container, Paper, Typography, Box } from "@mui/material";
+import { Container, Paper, Typography, Box, Link } from "@mui/material";
 import LocationFinder from "./components/LocationFinder";
 import { useEffect, useState } from "react";
 import { locationScheme } from "./hooks/useGeocoding";
@@ -68,6 +68,13 @@ export default function App() {
           latitude={location.lat}
         ></Forcast>
       </Box>
+      <Paper variant="outlined" sx={{ my: 2, p: 2 }}>
+        <Typography variant="body2" color="text.secondary">
+          Create by <Link href="https://github.com/RechieKho">Richie Kho</Link>.
+          Powered by{" "}
+          <Link href="https://openweathermap.org/">OpenWeatherMap</Link>.
+        </Typography>
+      </Paper>
     </Container>
   );
 }
