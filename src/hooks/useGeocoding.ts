@@ -3,17 +3,15 @@ import { z } from "zod";
 
 const geocodingURL = "https://api.openweathermap.org/geo/1.0/direct";
 
-const Geocoding = z.array(
-  z.object({
-    name: z.string(),
-    lat: z.number().finite(),
-    lon: z.number().finite(),
-    country: z.string(),
-    state: z.string().optional(),
-  })
-);
+export const locationScheme = z.object({
+  name: z.string(),
+  lat: z.number().finite(),
+  lon: z.number().finite(),
+  country: z.string(),
+  state: z.string().optional(),
+});
 
-export type GeocodingResult = z.infer<typeof Geocoding>;
+export const locationsScheme = z.array(locationScheme);
 
 export default function useGeocoding({
   apiKey,
@@ -24,9 +22,9 @@ export default function useGeocoding({
   query?: string;
   limit?: number;
 }) {
-  const [geocoding, setGeocoding] = useState<GeocodingResult | Error | null>(
-    []
-  );
+  const [geocoding, setGeocoding] = useState<
+    z.infer<typeof locationsScheme> | Error | null
+  >([]);
 
   useEffect(() => {
     const controller = new AbortController();
@@ -52,7 +50,7 @@ export default function useGeocoding({
           );
 
           const result = await fetch(request, { signal: controller.signal });
-          setGeocoding(Geocoding.parse(await result.json()));
+          setGeocoding(locationsScheme.parse(await result.json()));
         } catch (e) {
           if (!(e instanceof Error)) return; // Ignore malformed throw.
           if (e.name === "AbortError") return; // Ignore abort error.

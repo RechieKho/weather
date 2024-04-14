@@ -1,8 +1,8 @@
 import { Autocomplete, TextField, Box, Grid, Typography } from "@mui/material";
-import useGeocoding, { GeocodingResult } from "../hooks/useGeocoding";
+import useGeocoding, { locationScheme } from "../hooks/useGeocoding";
 import { useEffect, useState } from "react";
-import { ValuesType } from "utility-types";
 import { LocationOn } from "@mui/icons-material";
+import { z } from "zod";
 
 export default function LocationFinder({
   apiKey,
@@ -13,7 +13,7 @@ export default function LocationFinder({
 }: {
   apiKey: string;
   defaultQuery?: string;
-  onSelect?: (geocoding: ValuesType<GeocodingResult>) => void;
+  onSelect?: (geocoding: z.infer<typeof locationScheme>) => void;
   limit?: number;
   deferredQueryDuration?: number;
 }) {
