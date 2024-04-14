@@ -35,7 +35,7 @@ export default function App() {
   }, [location]);
 
   return (
-    <Container maxWidth="md">
+    <Container maxWidth="sm">
       <Paper variant="outlined" sx={{ my: 2, p: 2 }}>
         <LocationFinder
           onSelect={setLocation}
